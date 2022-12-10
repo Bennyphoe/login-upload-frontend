@@ -1,0 +1,23 @@
+.container {
+    text-align: center;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 80px;
+}
+
+.form-container {
+   display: flex;
+   flex-direction: column;
+   width: 600px;
+   gap: 20px;
+}
+
+.btn-group {
+    align-self: flex-end;
+    display: flex;
+    justify-content: center;
+    gap: 10px
+}

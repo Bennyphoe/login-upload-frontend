@@ -4,12 +4,16 @@ import Home from "./pages/home";
 import Register from "./pages/register";
 import Login from "./pages/login";
 import ProtectedPrivateRoute from "./protectivePages/protected-private-route";
+import ProtectedPublicRoute from "./protectivePages/protected-public-route";
 
 const routes = (
   <Routes>
-    {/* public routes */}
-    <Route path="/login" element={<Login/>}></Route>
-    <Route path="/register" element={<Register/>}></Route>
+    <Route path="/" element={<ProtectedPublicRoute />}>
+      {/* public routes */}
+      <Route path="/login" element={<Login/>}></Route>
+      <Route path="/register" element={<Register/>}></Route>
+    </Route>
+    
 
     {/* Private routes */}
     <Route path="/" element={<ProtectedPrivateRoute/>}>
