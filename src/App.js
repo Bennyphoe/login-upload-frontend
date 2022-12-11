@@ -9,21 +9,24 @@ import Layout from "./components/Layout";
 
 const routes = (
   <Routes>
-    <Route path="/" element={<ProtectedPublicRoute />}>
+    <Route path="/">
       {/* public routes */}
-      <Route path="/login" element={<Login/>}></Route>
-      <Route path="/register" element={<Register/>}></Route>
-    </Route>
+      <Route element={<ProtectedPublicRoute />}>
+        <Route path="/login" element={<Login/>}></Route>
+        <Route path="/register" element={<Register/>}></Route>
+      </Route>
+    
     
 
-    {/* Private routes */}
-    <Route path="/" element={<ProtectedPrivateRoute/>}>
-      <Route element={<Layout/>}>
-        <Route path="home" element={<Home />}></Route>
+      {/* Private routes */}
+      <Route element={<ProtectedPrivateRoute/>}>
+        <Route element={<Layout/>}>
+          <Route path="home" element={<Home />}></Route>
+        </Route>
       </Route>
+      {/* catch all */}
+      <Route path="*" element={<NotFound />}></Route>
     </Route>
-    {/* catch all */}
-    <Route path="*" element={<NotFound />}></Route>
    
   </Routes>
 )
