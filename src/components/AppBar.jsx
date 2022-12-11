@@ -4,7 +4,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import LogoutIcon from '@mui/icons-material/Logout';
 
 function AppBarCustom(props) {
-  const { logout, name } = props
+  const { logout, name, toggleDrawer } = props
   return (
     <Box sx={{ flowGrow: 1}}>
       <AppBar position="static">
@@ -15,6 +15,7 @@ function AppBarCustom(props) {
               color="inherit"
               aria-label="menu"
               sx={{ mr: 2 }}
+              onClick={toggleDrawer(true)}
             >
               <MenuIcon />
           </IconButton>

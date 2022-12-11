@@ -5,6 +5,7 @@ import Register from "./pages/register";
 import Login from "./pages/login";
 import ProtectedPrivateRoute from "./protectivePages/protected-private-route";
 import ProtectedPublicRoute from "./protectivePages/protected-public-route";
+import Layout from "./components/Layout";
 
 const routes = (
   <Routes>
@@ -17,7 +18,9 @@ const routes = (
 
     {/* Private routes */}
     <Route path="/" element={<ProtectedPrivateRoute/>}>
-      <Route path="home" element={<Home />}></Route>
+      <Route element={<Layout/>}>
+        <Route path="home" element={<Home />}></Route>
+      </Route>
     </Route>
     {/* catch all */}
     <Route path="*" element={<NotFound />}></Route>
