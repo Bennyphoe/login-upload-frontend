@@ -1,26 +1,20 @@
-import { Button, Typography } from '@mui/material'
-import { Stack } from '@mui/system'
-import React, { useEffect, useState } from 'react'
+import { Box, Stack } from '@mui/material'
+import React, { useState } from 'react'
 import SnackBar from '../components/SnackBar'
+import UploadForm from '../components/UploadForm'
+import UploadPreview from '../components/UploadPreview'
+import axios from "axios"
 
 
 function Home() {
   const [file, setFile] = useState(null)
-  const [preview, setPreview] = useState('')
-  const [savedImageSrc, setSavedImagedSrc] = useState('')
+  const [error, setError] = useState('')
+  const [progress, setProgress] = useState(0)
   const [successMessage, setSuccessMessage] = useState('')
   const [openNotification, setOpenNotification] = useState(false)
   const user = JSON.parse(localStorage.getItem('user'))
   const {id} = user
 
-  useEffect(() => {
-    let objectUrl
-    if (file) {
-      objectUrl = URL.createObjectURL(file)
-      setPreview(objectUrl)
-    }
-    return () => URL.revokeObjectURL(objectUrl)
-  }, [file])
 
   const uploadFile = (event) => {
     const uploadedFile = event.target.files[0]
@@ -31,63 +25,70 @@ function Home() {
     setOpenNotification(false)
   }
 
-  const uploadToServer = () => {
+  const uploadToServer = (caption, receiverId, receiverName) => {
     const formData = new FormData()
     formData.append("file", file)
-    formData.append("caption", '')
+    formData.append("caption", caption)
     formData.append("userId", id)
-    fetch('files', {
-      body: formData,
-      method: "POST"
+    formData.append("receipientId", receiverId)
+    console.log(formData)
+    axios.post('files', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      },
+      onUploadProgress: progressEvent => {
+        const {loaded, total} = progressEvent
+        setProgress(parseInt(Math.round((loaded * 100) / total)))
+      }
     }).then(response => {
-      if (response.ok) return response.json()
-      return Promise.reject(response)
-    }).then(data => {
-      setSavedImagedSrc(data.key)
-      setSuccessMessage('You Photo has been successfully uploaded!')
+      console.log(response.data)
+      setSuccessMessage(`You Photo has been successfully uploaded and sent to: ${receiverName}!`)
       setOpenNotification(true)
       setFile(null)
-      setPreview('')
-    }).catch(response => {
-      response.then(error => {
-        console.log(error.message)
-      })
+      setError('')
+      setTimeout(() => setProgress(0), 3000)
+    }).catch(error => {
+      const errorMessage = error.response.data.message
+      setError(errorMessage)
     })
   }
   
   return (
     <>
-      <Stack className='upload-container' 
-      direction="column" 
-      justifyContent="center" 
-      alignItems="center"
-      marginTop={30} 
-      spacing={2}>
-        <Button
-          variant="contained"
-          component="label"
+      <Box sx={{
+        display: "flex",
+        flexDirection: "row",
+        width: "100%",
+        justifyContent: "center",
+        alignItems: "center",
+      }}>
+        <Stack
+          direction="row"
+          justifyContent="center"
+          alignItems="center"
+          height={800}
+          width={800}
+          spacing={3}
         >
-          Upload Photo
-          <input
-            accept="image/*"
-            hidden
-            onChange={(event) => uploadFile(event)}
-            type="file"
-          ></input>
-        </Button>
-        <Typography component="span">
-          <h4 style={{display: 'inline'}}>Preview</h4> {file ? file.name: ''}
-        </Typography>
-        {file ? <img style={{height: 300, width: 300}} src={preview} alt="PREVIEW"/> : <></>}
-        <Button variant="contained" onClick={uploadToServer}>
-          Submit
-        </Button>
-        {savedImageSrc ? <img 
-        style={{height: 300, width: 300}} 
-        src={`files/${savedImageSrc}`} 
-        alt="Saved"/> 
-        : <></>}
-      </Stack>
+          <UploadPreview 
+            buttonText="Upload Image"
+            uploadAccept="image/*"
+            uploadFile={uploadFile}
+            file={file}
+            imageDimensions={{height: 300, width: 300}}
+          />
+          <UploadForm
+            uploadToServer={uploadToServer}
+            error={error}
+            hasFile={file ? true : false}
+            progress={progress}
+          >
+          </UploadForm>
+        </Stack>
+        
+
+      </Box>
+      
       <SnackBar 
         open={openNotification}
         handleClose={handleClose}

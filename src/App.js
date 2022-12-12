@@ -6,6 +6,8 @@ import Login from "./pages/login";
 import ProtectedPrivateRoute from "./protectivePages/protected-private-route";
 import ProtectedPublicRoute from "./protectivePages/protected-public-route";
 import Layout from "./components/Layout";
+import ViewSent from "./pages/view-sent";
+import ViewReceived from "./pages/view-received";
 
 const routes = (
   <Routes>
@@ -22,6 +24,8 @@ const routes = (
       <Route element={<ProtectedPrivateRoute/>}>
         <Route element={<Layout/>}>
           <Route path="home" element={<Home />}></Route>
+          <Route path="view/sent" element={<ViewSent />}></Route>
+          <Route path="view/received" element={<ViewReceived />}></Route>
         </Route>
       </Route>
       {/* catch all */}
