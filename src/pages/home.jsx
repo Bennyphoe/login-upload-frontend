@@ -26,6 +26,10 @@ function Home() {
   }
 
   const uploadToServer = (caption, receiverId, receiverName) => {
+    if (receiverId === id) {
+      setError("You are the receiver...")
+      return
+    }
     const formData = new FormData()
     formData.append("file", file)
     formData.append("caption", caption)

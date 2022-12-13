@@ -1,5 +1,6 @@
-import { Box, Container } from '@mui/material'
+import { Box, Container, Typography } from '@mui/material'
 import React, { useEffect, useState } from 'react'
+import ImageWithDetails from '../components/ImageWithDetails'
 import "../styles/view-sent-style.css"
 
 function ViewSent() {
@@ -25,16 +26,19 @@ function ViewSent() {
     <Box
       sx={{
         display: 'flex',
+        flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
         margin: '30px'
       }}
     >
+      <Typography mb={8} variant="h2">~ Sent Photos ~</Typography>
       <Container className="image-grid">
         {/* Create galley Image component */}
         {sentFiles.length > 0 ? sentFiles.map(file => {
+          const {receiver, sender} = file
           return (
-            <img src={`/files/${file.name}`} alt="placeholder" className='gallery-img' key={file.name}/>
+            <ImageWithDetails imageClassName="gallery-img" imageSrc={`/files/${file.name}`} key={file.name} receiver={receiver} sender={sender} date={file.date} caption={file.caption}/>
           )
         }): <></>}
       </Container>
